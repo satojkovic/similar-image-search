@@ -1,13 +1,14 @@
 from torch.utils.data import Dataset
 from skimage import io
 import glob
+import os
 
 
 class ImageDataset(Dataset):
     def __init__(self, root_dir, transform=None):
-        self.image_paths = glob.glob(root_dir + '*.jpg')
+        self.image_paths = glob.glob(os.path.join(root_dir, '*', '*.jpg'))
         assert len(self.image_paths) != 0, "No images found in {}".format(
-            root_dir)
+            os.path.join(root_dir, '*', '*.jpg'))
         self.transform = transform
 
     def __len__(self):
