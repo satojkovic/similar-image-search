@@ -1,13 +1,29 @@
-import timm
+import torch
+import torchvision.models as tvm
+import torch.nn as nn
+import torch
 from torchsummary import summary
 
 
-def setup_model(model_name):
-    assert model_name == 'resnet50' or model_name == 'inception_v4', 'Model name must be either resnet50 or inception_v4.'
-    model = timm.create_model(model_name, pretrained=True, num_classes=0)
-    return model
+def get_model(name):
+    if name is 'resnet':
+        return Resnet50()
+    else:
+        raise SystemExit('Please specify a model name')
 
 
-if __name__ == '__main__':
-    model = setup_model('resnet50')
-    summary(model, input_size=(3, 224, 224))
+def torch_device():
+    if torch.cuda.device_count() > 0:
+        return 'cuda:0'
+    else:
+        return 'cpu'
+
+
+class Resnet50:
+    def __init__(self):
+        self.model = tvm.resnet50(pretrained=True)
+        self.features = nn.Sequential(
+            *list(self.model.children)[::-1]).to(torch_device())
+
+    def forward_pass(self, batch):
+        return self.features.forward(batch).view(batch.size(0), -1)
