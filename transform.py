@@ -1,5 +1,6 @@
 from skimage import transform
 import numpy as np
+import torch
 
 
 class Rescale:
@@ -37,3 +38,12 @@ class RandomCrop:
         left = np.random.randint(0, w - new_w)
         img = image[top:top + new_h, left:left+new_w]
         return img
+
+
+class ToTensor:
+    def __call__(self, image):
+        # swap color axis because
+        # numpy image: H x W x C
+        # torch image: C x H x W
+        image = image.transpose((2, 0, 1))
+        return torch.from_numpy(image)
