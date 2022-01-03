@@ -6,7 +6,7 @@ from torchsummary import summary
 
 
 def get_model(name):
-    if name is 'resnet':
+    if name == 'resnet':
         return Resnet50()
     else:
         raise SystemExit('Please specify a model name')
@@ -23,7 +23,10 @@ class Resnet50:
     def __init__(self):
         self.model = tvm.resnet50(pretrained=True)
         self.features = nn.Sequential(
-            *list(self.model.children)[::-1]).to(torch_device())
+            *list(self.model.children())[:-1]).to(torch_device())
 
     def forward_pass(self, batch):
-        return self.features.forward(batch).view(batch.size(0), -1)
+        return self.features.forward(batch.float()).view(batch.size(0), -1)
+
+    def summary(self):
+        summary(self.model, (3, 224, 224))
