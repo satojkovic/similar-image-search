@@ -1,6 +1,8 @@
 import fire
 from annoy import AnnoyIndex
 import numpy as np
+from skimage import io
+from transform import get_transforms
 
 
 def construct_ann_index(features, metric, ntrees):
@@ -12,9 +14,17 @@ def construct_ann_index(features, metric, ntrees):
     return ann
 
 
-def run(features_npy, metrics='angular', ntrees=50):
+def get_single_image(query_image):
+    image = io.imread(query_image)
+    transform = get_transforms()
+    image = transform(image)
+    return image
+
+
+def run(query_image, features_npy, metrics='angular', ntrees=50):
     features = np.load(features_npy)
     ann = construct_ann_index(features, metrics, ntrees)
+    query_image = get_single_image(query_image)
 
 
 if __name__ == '__main__':

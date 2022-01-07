@@ -1,6 +1,7 @@
 from skimage import transform
 import numpy as np
 import torch
+from torchvision import transforms
 
 
 class Rescale:
@@ -47,3 +48,7 @@ class ToTensor:
         # torch image: C x H x W
         image = image.transpose((2, 0, 1))
         return torch.from_numpy(image)
+
+
+def get_transforms():
+    return transforms.Compose([Rescale(256), RandomCrop(224), ToTensor()])

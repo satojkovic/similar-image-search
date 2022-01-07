@@ -7,15 +7,13 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 import numpy as np
 import time
-from torchvision import transforms
-from transform import Rescale, RandomCrop, ToTensor
+from transform import get_transforms
 import os
 
 
 def run(model_name, output_dir, dataname, data_dir, batch_size=8):
     data_path = os.path.join(data_dir, dataname)
-    ds = ImageDataset(data_path, transform=transforms.Compose(
-        [Rescale(256), RandomCrop(224), ToTensor()]))
+    ds = ImageDataset(data_path, transform=get_transforms())
     model = get_model(model_name)
     data_loader = DataLoader(ds, batch_size=batch_size)
 
