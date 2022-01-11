@@ -9,6 +9,8 @@ class ImageDataset(Dataset):
         self.image_paths = glob.glob(os.path.join(root_dir, '*', '*.jpg'))
         assert len(self.image_paths) != 0, "No images found in {}".format(
             os.path.join(root_dir, '*', '*.jpg'))
+        self.image_names = [os.path.basename(
+            path) for path in self.image_paths]
         self.transform = transform
 
     def __len__(self):
