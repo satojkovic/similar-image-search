@@ -21,10 +21,12 @@ def get_single_image(query_image):
     return image
 
 
-def run(query_image, features_npy, metrics='angular', ntrees=50):
+def run(features_npy, metrics='angular', ntrees=50, topk=5):
     features = np.load(features_npy)
     ann = construct_ann_index(features, metrics, ntrees)
-    query_image = get_single_image(query_image)
+    query_index = np.random.randint(0, ann.get_n_items())
+    closest_items = ann.get_nns_by_item(query_index, topk)
+    closest_items = closest_items[1:]
 
 
 if __name__ == '__main__':
